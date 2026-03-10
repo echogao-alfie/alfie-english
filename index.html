@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baby English Time 🌟</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #7EC8E3;
+    --sun: #FFD166;
+    --grass: #73C67A;
+    --peach: #FF9A76;
+    --lavender: #C9B8F5;
+    --cloud: #FFF9F0;
+    --ink: #2D2D3A;
+    --soft: #F7F3FF;
+    --card-bg: rgba(255,255,255,0.92);
+    --shadow: 0 8px 32px rgba(100,80,180,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(160deg, #e0f4ff 0%, #fff4e6 50%, #f0ffe4 100%);
+    min-height: 100vh;
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* Floating bubbles background */
+  .bubbles {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .bubble {
+    position: absolute; border-radius: 50%; opacity: 0.18;
+    animation: floatUp linear infinite;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(110vh) scale(0.8); opacity: 0.12; }
+    100% { transform: translateY(-20vh) scale(1.1); opacity: 0; }
+  }
+
+  .app-wrap {
+    position: relative; z-index: 1;
+    max-width: 680px; margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+
+  /* Header */
+  header {
+    text-align: center; padding: 24px 0 28px;
+    animation: dropIn 0.7s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes dropIn {
+    from { opacity: 0; transform: translateY(-32px) scale(0.9); }
+    to { opacity: 1; transform: none; }
+  }
+  .logo-icon { font-size: 3.2rem; display: block; margin-bottom: 4px; }
+  header h1 {
+    font-family: 'Baloo 2', cursive; font-size: 2.2rem; font-weight: 800;
+    background: linear-gradient(135deg, #FF7E5F, #FEB47B, #7EC8E3);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; line-height: 1.1; margin-bottom: 6px;
+  }
+  header p {
+    font-size: 1rem; color: #7a6e8a; font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  /* Upload zone */
+  .upload-zone {
+    background: var(--card-bg);
+    border: 3px dashed #c9b8f5;
+    border-radius: 28px;
+    padding: 36px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    animation: fadeSlide 0.5s 0.2s both;
+    position: relative;
+    overflow: hidden;
+  }
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: none; }
+  }
+  .upload-zone:hover, .upload-zone.drag-over {
+    border-color: var(--peach);
+    background: #fff8f0;
+    transform: scale(1.01);
+    box-shadow: 0 12px 40px rgba(255,154,118,0.18);
+  }
+  .upload-zone .upload-icon { font-size: 3.5rem; display: block; margin-bottom: 12px; }
+  .upload-zone h2 { font-family: 'Baloo 2', cursive; font-size: 1.35rem; font-weight: 700; color: #5a4e7a; margin-bottom: 6px; }
+  .upload-zone p { color: #9a8eb0; font-size: 0.92rem; }
+  #file-input { display: none; }
+
+  /* Preview */
+  .preview-wrap {
+    position: relative;
+    border-radius: 24px; overflow: hidden;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+    display: none;
+    animation: zoomIn 0.4s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.88); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  #preview-img {
+    width: 100%; display: block; max-height: 380px; object-fit: cover;
+  }
+  #label-canvas {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+  }
+  .change-photo-btn {
+    position: absolute; top: 12px; right: 12px;
+    background: rgba(255,255,255,0.92);
+    border: none; border-radius: 20px;
+    padding: 7px 16px; font-family: 'Nunito', sans-serif;
+    font-size: 0.82rem; font-weight: 700; color: #7a6e8a;
+    cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  }
+  .change-photo-btn:hover { background: white; transform: scale(1.05); }
+
+  /* Options row */
+  .options-row {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    margin-bottom: 16px;
+    animation: fadeSlide 0.5s 0.3s both;
+  }
+  .option-chip {
+    flex: 1; min-width: 130px;
+    background: var(--card-bg);
+    border: 2.5px solid transparent;
+    border-radius: 16px; padding: 12px 10px;
+    text-align: center; cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700; font-size: 0.88rem;
+    color: #7a6e8a;
+  }
+  .option-chip .chip-icon { font-size: 1.6rem; display: block; margin-bottom: 4px; }
+  .option-chip:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(100,80,180,0.14); }
+  .option-chip.selected { border-color: var(--lavender); background: #f5f0ff; color: #5a3fa0; }
+  .option-chip.selected.words { border-color: var(--sky); background: #edf9ff; color: #1a7a9a; }
+  .option-chip.selected.sentence { border-color: var(--grass); background: #f0fff2; color: #1a7a3a; }
+  .option-chip.selected.song { border-color: var(--peach); background: #fff5ef; color: #c05010; }
+
+  /* Play all song button */
+  .play-all-btn {
+    background: linear-gradient(135deg, #FF9A76, #ff7043);
+    border: none; border-radius: 20px;
+    padding: 8px 18px; font-family: 'Baloo 2', cursive;
+    font-size: 0.95rem; font-weight: 800; color: white;
+    cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 3px 10px rgba(255,112,67,0.35);
+    flex-shrink: 0;
+  }
+  .play-all-btn:hover { transform: scale(1.06); box-shadow: 0 5px 16px rgba(255,112,67,0.45); }
+  .play-all-btn.playing { background: linear-gradient(135deg, #e53935, #b71c1c); }
+  .song-line.active {
+    background: linear-gradient(135deg, #fff5ef, #ffe8dc);
+    border-radius: 8px; padding: 2px 8px; margin: 0 -8px;
+    transition: background 0.3s;
+    font-weight: 800;
+  }
+
+  /* Options label */
+  .options-label {
+    font-size: 0.82rem; font-weight: 700; color: #a090c0;
+    text-align: center; margin: 20px 0 8px;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+
+  /* Quick Mom Phrases */
+  .quick-phrases {
+    background: linear-gradient(135deg, #fff8f2, #fff2f8);
+    border: 2.5px solid #ffd0b0;
+    border-radius: 22px;
+    padding: 16px 18px 14px;
+    margin-bottom: 16px;
+    animation: fadeSlide 0.4s both;
+    box-shadow: 0 6px 20px rgba(255,154,118,0.12);
+  }
+  .qp-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 12px;
+  }
+  .qp-icon { font-size: 1.3rem; }
+  .qp-title {
+    font-family: 'Baloo 2', cursive; font-size: 0.88rem;
+    font-weight: 700; color: #c06030; letter-spacing: 0.01em;
+  }
+  .qp-dots {
+    display: flex; gap: 7px; justify-content: center; padding: 6px 0;
+  }
+  .qp-dots span {
+    width: 9px; height: 9px; border-radius: 50%;
+    animation: bounce 0.7s infinite alternate;
+  }
+  .qp-dots span:nth-child(1) { background: #FF9A76; animation-delay: 0s; }
+  .qp-dots span:nth-child(2) { background: #FFD166; animation-delay: 0.2s; }
+  .qp-dots span:nth-child(3) { background: #FF9A76; animation-delay: 0.4s; }
+  .qp-phrase {
+    display: flex; align-items: flex-start; gap: 10px;
+    background: white;
+    border-radius: 14px; padding: 11px 14px;
+    margin-bottom: 8px;
+    border-left: 3.5px solid #FF9A76;
+    box-shadow: 0 2px 8px rgba(255,154,118,0.08);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .qp-phrase:last-child { margin-bottom: 0; }
+  .qp-phrase:hover { transform: translateX(3px); box-shadow: 0 4px 14px rgba(255,154,118,0.18); }
+  .qp-phrase:active { transform: scale(0.98); }
+  .qp-phrase-text { flex: 1; }
+  .qp-eng {
+    font-weight: 700; font-size: 0.97rem; color: #3a2a1a; line-height: 1.4;
+  }
+  .qp-zh {
+    font-size: 0.8rem; color: #b07050; margin-top: 3px;
+  }
+  .qp-speak {
+    background: none; border: none; font-size: 1.1rem;
+    cursor: pointer; padding: 2px; opacity: 0.6;
+    transition: opacity 0.2s, transform 0.2s; flex-shrink: 0;
+  }
+  .qp-speak:hover { opacity: 1; transform: scale(1.2); }
+  .qp-hint {
+    font-size: 0.75rem; color: #c09070; text-align: center;
+    margin-top: 10px; font-style: italic;
+  }
+
+  /* Generate button */
+  .generate-btn {
+    width: 100%; padding: 18px;
+    background: linear-gradient(135deg, #FF9A76, #FFB347);
+    border: none; border-radius: 20px;
+    font-family: 'Baloo 2', cursive; font-size: 1.25rem; font-weight: 800;
+    color: white; cursor: pointer;
+    box-shadow: 0 6px 20px rgba(255,154,118,0.4);
+    transition: all 0.22s ease;
+    letter-spacing: 0.02em;
+    margin-bottom: 24px;
+    animation: fadeSlide 0.5s 0.4s both;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .generate-btn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(255,154,118,0.5);
+  }
+  .generate-btn:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+
+  /* Result cards */
+  .results-area { display: none; }
+  .result-card {
+    background: var(--card-bg);
+    border-radius: 24px; padding: 24px;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+    animation: slideUp 0.5s cubic-bezier(.34,1.56,.64,1) both;
+    border-left: 5px solid var(--lavender);
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: none; }
+  }
+  .result-card.words-card { border-color: var(--sky); }
+  .result-card.sentence-card { border-color: var(--grass); }
+  .result-card.song-card { border-color: var(--peach); }
+  .result-card.ideas-card { border-color: var(--lavender); }
+
+  .card-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px;
+  }
+  .card-header .card-icon { font-size: 1.7rem; }
+  .card-header h3 {
+    font-family: 'Baloo 2', cursive; font-size: 1.15rem; font-weight: 700;
+    color: #5a4e7a;
+  }
+
+  /* Words */
+  .words-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+  .word-item {
+    background: linear-gradient(135deg, #e8f7ff, #d0f0ff);
+    border-radius: 14px; padding: 12px 16px;
+    display: flex; flex-direction: column; align-items: center;
+    min-width: 90px; cursor: pointer;
+    transition: transform 0.2s;
+    border: 2px solid rgba(126,200,227,0.4);
+  }
+  .word-item:hover { transform: scale(1.06); }
+  .word-item .w-emoji { font-size: 1.8rem; }
+  .word-item .w-english { font-weight: 800; font-size: 1rem; color: #1a6080; margin-top: 3px; }
+  .word-item .w-pinyin { font-size: 0.75rem; color: #4a90b8; margin-top: 1px; }
+  .word-item .w-chinese { font-size: 0.8rem; color: #6ab0c8; }
+
+  /* Sentence */
+  .sentence-block {
+    background: linear-gradient(135deg, #f0fff4, #e8ffee);
+    border-radius: 16px; padding: 18px;
+    margin-bottom: 12px;
+    border: 2px solid rgba(115,198,122,0.3);
+  }
+  .sentence-block .eng { font-size: 1.15rem; font-weight: 700; color: #1a5030; margin-bottom: 6px; }
+  .sentence-block .zh { font-size: 0.95rem; color: #4a8060; }
+  .sentence-block .tip { font-size: 0.82rem; color: #7ab090; margin-top: 6px; font-style: italic; }
+
+  /* Song */
+  .song-block {
+    background: linear-gradient(135deg, #fff8f0, #ffefe0);
+    border-radius: 16px; padding: 18px;
+    border: 2px solid rgba(255,154,118,0.3);
+  }
+  .song-title { font-family: 'Baloo 2', cursive; font-weight: 800; font-size: 1.1rem; color: #c05010; margin-bottom: 12px; }
+  .song-line { font-size: 1rem; color: #6a3010; line-height: 1.9; font-weight: 600; }
+  .song-note { font-size: 0.82rem; color: #c07050; margin-top: 10px; font-style: italic; }
+
+  /* Ideas */
+  .idea-item {
+    display: flex; gap: 14px; align-items: flex-start;
+    background: linear-gradient(135deg, #f9f4ff, #f3ecff);
+    border-radius: 16px; padding: 14px;
+    margin-bottom: 10px;
+    border: 2px solid rgba(201,184,245,0.4);
+  }
+  .idea-icon { font-size: 1.6rem; flex-shrink: 0; }
+  .idea-text .idea-title { font-weight: 800; color: #4a2a90; font-size: 0.98rem; }
+  .idea-text .idea-desc { font-size: 0.87rem; color: #7a5ab0; margin-top: 3px; line-height: 1.5; }
+
+  /* Loading */
+  .loading-overlay {
+    display: none; text-align: center; padding: 40px 20px;
+    background: var(--card-bg); border-radius: 24px;
+    box-shadow: var(--shadow); margin-bottom: 20px;
+  }
+  .loading-overlay.show { display: block; }
+  .loading-dots {
+    display: flex; justify-content: center; gap: 10px; margin-bottom: 16px;
+  }
+  .loading-dots span {
+    width: 14px; height: 14px; border-radius: 50%;
+    animation: bounce 0.8s infinite alternate;
+  }
+  .loading-dots span:nth-child(1) { background: var(--peach); animation-delay: 0s; }
+  .loading-dots span:nth-child(2) { background: var(--sky); animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { background: var(--grass); animation-delay: 0.4s; }
+  @keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-16px); }
+  }
+  .loading-overlay p { font-family: 'Baloo 2', cursive; font-size: 1.1rem; color: #7a6e8a; font-weight: 600; }
+
+  /* Speak button */
+  .speak-btn {
+    background: none; border: none; cursor: pointer; font-size: 1.2rem;
+    margin-left: 8px; transition: transform 0.2s; vertical-align: middle;
+    opacity: 0.7;
+  }
+  .speak-btn:hover { transform: scale(1.3); opacity: 1; }
+
+  /* Error */
+  .error-msg {
+    background: #fff0f0; border: 2px solid #ffb0b0; border-radius: 16px;
+    padding: 16px; text-align: center; color: #c05050;
+    font-weight: 700; margin-bottom: 16px; display: none;
+  }
+
+  /* Try again */
+  .try-again-btn {
+    width: 100%; padding: 14px;
+    background: white; border: 2.5px solid var(--lavender);
+    border-radius: 16px; font-family: 'Nunito', sans-serif;
+    font-size: 1rem; font-weight: 700; color: #7a5ab0;
+    cursor: pointer; transition: all 0.2s; margin-top: 4px;
+    display: none;
+  }
+  .try-again-btn:hover { background: #f5f0ff; transform: translateY(-2px); }
+
+  footer {
+    text-align: center; padding: 20px 0 0;
+    font-size: 0.82rem; color: #b0a0c8; font-weight: 600;
+  }
+
+  @media (max-width: 420px) {
+    header h1 { font-size: 1.7rem; }
+    .option-chip { min-width: 100px; padding: 10px 8px; font-size: 0.82rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bubbles" id="bubbles"></div>
+
+<div class="app-wrap">
+  <header>
+    <span class="logo-icon">🌈</span>
+    <h1>Baby English Time</h1>
+    <p>📸 Share a photo → Learn English together! 一起学英语！</p>
+  </header>
+
+  <!-- Upload zone -->
+  <div class="upload-zone" id="upload-zone">
+    <span class="upload-icon">📷</span>
+    <h2>Share a photo of your baby!</h2>
+    <p>Upload a picture of what you're doing together<br>上传一张你们一起做的事情的照片</p>
+    <input type="file" id="file-input" accept="image/*">
+  </div>
+
+  <!-- Preview -->
+  <div class="preview-wrap" id="preview-wrap">
+    <img id="preview-img" src="" alt="Your photo">
+    <canvas id="label-canvas"></canvas>
+    <button class="change-photo-btn" onclick="resetUpload()">📷 Change photo</button>
+  </div>
+
+  <!-- Quick Mom Phrases -->
+  <div class="quick-phrases" id="quick-phrases" style="display:none;">
+    <div class="qp-header">
+      <span class="qp-icon">🤱</span>
+      <span class="qp-title">Say this to your baby now! · 现在就对宝宝说！</span>
+    </div>
+    <div class="qp-loading" id="qp-loading">
+      <div class="qp-dots"><span></span><span></span><span></span></div>
+    </div>
+    <div class="qp-body" id="qp-body"></div>
+  </div>
+
+  <!-- Generate button -->
+  <button class="generate-btn" id="gen-btn" onclick="generateContent()" disabled>
+    <span>✨</span> Generate English Learning!
+  </button>
+
+  <!-- Options (below generate button) -->
+  <div class="options-label">Choose what to generate · 选择生成内容</div>
+  <div class="options-row" id="options-row">
+    <div class="option-chip sentence selected" data-type="sentence" onclick="toggleOption(this)">
+      <span class="chip-icon">💬</span>
+      Say It!
+    </div>
+    <div class="option-chip words selected" data-type="words" onclick="toggleOption(this)">
+      <span class="chip-icon">🔤</span>
+      Key Words
+    </div>
+    <div class="option-chip song selected" data-type="song" onclick="toggleOption(this)">
+      <span class="chip-icon">🎵</span>
+      Sing It!
+    </div>
+    <div class="option-chip selected" data-type="ideas" onclick="toggleOption(this)">
+      <span class="chip-icon">💡</span>
+      Fun Ideas
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div class="error-msg" id="error-msg"></div>
+
+  <!-- Loading -->
+  <div class="loading-overlay" id="loading">
+    <div class="loading-dots">
+      <span></span><span></span><span></span>
+    </div>
+    <p>✨ Creating English magic for your baby...</p>
+  </div>
+
+  <!-- Results -->
+  <div class="results-area" id="results-area"></div>
+
+  <!-- Try again -->
+  <button class="try-again-btn" id="try-again-btn" onclick="generateContent()">🔄 Generate Again</button>
+
+  <footer>Made with 💕 for mamas teaching English at home</footer>
+</div>
+
+<script>
+// Bubbles background
+(function() {
+  const colors = ['#FFD166','#7EC8E3','#73C67A','#FF9A76','#C9B8F5','#FFB3C6'];
+  const container = document.getElementById('bubbles');
+  for (let i = 0; i < 18; i++) {
+    const b = document.createElement('div');
+    b.className = 'bubble';
+    const size = 20 + Math.random() * 60;
+    b.style.cssText = `
+      width:${size}px; height:${size}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      left:${Math.random()*100}%;
+      animation-duration:${8+Math.random()*14}s;
+      animation-delay:${-Math.random()*14}s;
+    `;
+    container.appendChild(b);
+  }
+})();
+
+let imageBase64 = null;
+let selectedTypes = new Set(['words','sentence','song','ideas']);
+
+// Upload handling
+const uploadZone = document.getElementById('upload-zone');
+const fileInput = document.getElementById('file-input');
+
+uploadZone.addEventListener('click', () => fileInput.click());
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadZone.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) processImage(file);
+});
+fileInput.addEventListener('change', e => {
+  if (e.target.files[0]) processImage(e.target.files[0]);
+});
+
+function processImage(file) {
+  const MAX_MB = 10;
+  if (file.size > MAX_MB * 1024 * 1024) {
+    const errorMsg = document.getElementById('error-msg');
+    errorMsg.textContent = `⚠️ Photo is too large (max ${MAX_MB}MB). Please choose a smaller photo.`;
+    errorMsg.style.display = 'block';
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const originalSrc = e.target.result;
+    // Show preview immediately
+    document.getElementById('preview-img').src = originalSrc;
+    document.getElementById('preview-wrap').style.display = 'block';
+    document.getElementById('upload-zone').style.display = 'none';
+    document.getElementById('gen-btn').disabled = false;
+    document.getElementById('results-area').style.display = 'none';
+    document.getElementById('try-again-btn').style.display = 'none';
+    document.getElementById('results-area').innerHTML = '';
+    document.getElementById('error-msg').style.display = 'none';
+
+    // Compress image to keep API payload under ~4MB base64
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const MAX_DIM = 1600;
+      let w = img.width, h = img.height;
+      if (w > MAX_DIM || h > MAX_DIM) {
+        if (w > h) { h = Math.round(h * MAX_DIM / w); w = MAX_DIM; }
+        else { w = Math.round(w * MAX_DIM / h); h = MAX_DIM; }
+      }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      // Compress quality until base64 is small enough
+      let quality = 0.85;
+      let dataUrl = canvas.toDataURL('image/jpeg', quality);
+      while (dataUrl.length > 4 * 1024 * 1024 * 1.37 && quality > 0.4) {
+        quality -= 0.1;
+        dataUrl = canvas.toDataURL('image/jpeg', quality);
+      }
+      imageBase64 = dataUrl.split(',')[1];
+      // Run sequentially to avoid concurrency limit
+      fetchQuickPhrases(imageBase64).then(() => fetchPhotoLabels(imageBase64));
+    };
+    img.src = originalSrc;
+  };
+  reader.readAsDataURL(file);
+}
+
+function resetUpload() {
+  imageBase64 = null;
+  document.getElementById('preview-wrap').style.display = 'none';
+  document.getElementById('upload-zone').style.display = 'block';
+  document.getElementById('gen-btn').disabled = true;
+  document.getElementById('results-area').style.display = 'none';
+  document.getElementById('try-again-btn').style.display = 'none';
+  document.getElementById('results-area').innerHTML = '';
+  document.getElementById('error-msg').style.display = 'none';
+  fileInput.value = '';
+  const canvas = document.getElementById('label-canvas');
+  if (canvas) { const ctx = canvas.getContext('2d'); ctx.clearRect(0,0,canvas.width,canvas.height); }
+  document.getElementById('quick-phrases').style.display = 'none';
+  document.getElementById('qp-body').innerHTML = '';
+}
+
+function toggleOption(el) {
+  const type = el.dataset.type;
+  if (selectedTypes.has(type)) {
+    if (selectedTypes.size > 1) { selectedTypes.delete(type); el.classList.remove('selected'); }
+  } else {
+    selectedTypes.add(type); el.classList.add('selected');
+  }
+}
+
+function speak(text) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US';
+  u.rate = 0.78;
+  u.pitch = 1.35;
+  u.volume = 1.0;
+
+  function pickVoice() {
+    const voices = window.speechSynthesis.getVoices();
+    const preferred = [
+      'Samantha', 'Karen', 'Moira', 'Tessa',
+      'Google US English',
+      'Microsoft Zira', 'Microsoft Jenny',
+      'Alice', 'Fiona',
+    ];
+    for (const name of preferred) {
+      const v = voices.find(v => v.name.includes(name) && v.lang.startsWith('en'));
+      if (v) return v;
+    }
+    return voices.find(v => v.lang === 'en-US') ||
+           voices.find(v => v.lang.startsWith('en')) ||
+           null;
+  }
+
+  const trySpeak = () => {
+    const voice = pickVoice();
+    if (voice) u.voice = voice;
+    window.speechSynthesis.speak(u);
+  };
+
+  if (window.speechSynthesis.getVoices().length === 0) {
+    window.speechSynthesis.onvoiceschanged = () => { trySpeak(); window.speechSynthesis.onvoiceschanged = null; };
+  } else {
+    trySpeak();
+  }
+}
+
+function extractJSON(text) {
+  let s = text.replace(/```json|```/g, '').trim();
+  const start = s.indexOf('{');
+  const end = s.lastIndexOf('}');
+  if (start === -1 || end === -1) throw new Error('No JSON object found in response');
+  s = s.slice(start, end + 1);
+  s = s.replace(/,(\s*[}\]])/g, '$1');
+  return JSON.parse(s);
+}
+
+async function callAPI(systemPrompt, userText) {
+  const response = await fetch("/api/claude", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 2000,
+      system: systemPrompt,
+      messages: [{
+        role: "user",
+        content: [
+          { type: "image", source: { type: "base64", media_type: "image/jpeg", data: imageBase64 }},
+          { type: "text", text: userText }
+        ]
+      }]
+    })
+  });
+  const data = await response.json();
+  if (data.error) throw new Error(data.error.message);
+  return extractJSON(data.content.map(b => b.text || '').join(''));
+}
+
+async function generateContent() {
+  if (!imageBase64) return;
+
+  const loading = document.getElementById('loading');
+  const resultsArea = document.getElementById('results-area');
+  const errorMsg = document.getElementById('error-msg');
+  const genBtn = document.getElementById('gen-btn');
+  const tryAgain = document.getElementById('try-again-btn');
+
+  loading.classList.add('show');
+  resultsArea.style.display = 'none';
+  resultsArea.innerHTML = '';
+  errorMsg.style.display = 'none';
+  tryAgain.style.display = 'none';
+  genBtn.disabled = true;
+
+  const typesWanted = Array.from(selectedTypes);
+  // Split song into its own call to avoid token overflow
+  const mainTypes = typesWanted.filter(t => t !== 'song');
+  const wantSong = typesWanted.includes('song');
+
+  const sysMain = `You are helping a Chinese mother create a natural English immersion environment for her 1-3 year old baby at home.
+Always respond ONLY with valid JSON. No markdown, no extra text outside JSON.
+Keep English simple, warm and playful — exactly how a loving mom talks to a baby.
+Include Chinese translations (普通话) so the mother understands.`;
+
+  const sysSong = `You write short, simple nursery songs for babies age 1-3.
+Always respond ONLY with valid JSON. No markdown, no extra text outside JSON.
+Song lines must be SHORT — max 6 words each. Simple, singable, rhyming if possible.`;
+
+  try {
+    const promises = [];
+
+    if (mainTypes.length > 0) {
+      // Build instructions and example JSON fields as arrays to avoid trailing comma bugs
+      const instructions = [];
+      const exampleFields = [];
+
+      if (mainTypes.includes('words')) {
+        instructions.push('For "words": Pick 5 specific tangible objects DIRECTLY VISIBLE — things baby is touching/holding/looking at. NOT room/floor/wall/house/ceiling. Include x,y (0.0-1.0) position in photo. Spread positions apart.');
+        exampleFields.push('"words":[{"emoji":"🐶","english":"doggy","chinese":"小狗","pinyin":"xiao gou","x":0.3,"y":0.5},{"emoji":"🎈","english":"balloon","chinese":"气球","pinyin":"qi qiu","x":0.7,"y":0.2}]');
+      }
+      if (mainTypes.includes('sentence')) {
+        instructions.push('For "sentences": 5 natural phrases a native English mom says OUT LOUD right now. Real mom talk like "Oh wow, look at that!" Warm and playful. Include chinese translation and a short tip.');
+        exampleFields.push('"sentences":[{"english":"Oh wow, look at that!","chinese":"哇，快看！","tip":"Point and smile"},{"english":"Can you touch it, baby?","chinese":"宝宝你能碰碰吗？","tip":"Guide hand"}]');
+      }
+      if (mainTypes.includes('ideas')) {
+        instructions.push('For "ideas": 3 fun English learning activities for this scene. Short description in English then Chinese.');
+        exampleFields.push('"ideas":[{"icon":"🎯","title":"Name Game","description":"Point to each object and say its name out loud. 指着每样东西说出英文名字"}]');
+      }
+
+      const mainPrompt = [
+        "Look at this photo. A Chinese mom is with her 1-3 year old baby.",
+        "",
+        instructions.join(" "),
+        "",
+        "Return ONLY valid JSON with exactly these fields, nothing else:",
+        "{" + exampleFields.join(",") + "}"
+      ].join("\n");
+
+      promises.push(callAPI(sysMain, mainPrompt));
+    } else {
+      promises.push(Promise.resolve({}));
+    }
+
+    if (wantSong) {
+      const songPrompt = [
+        "Look at this photo of a baby (age 1-3) doing an activity.",
+        "Write a short fun nursery song about what the baby is doing.",
+        "RULES: Exactly 6 lines. Each line MAX 6 words. Simple words. Rhyming pairs preferred.",
+        "Return ONLY this exact JSON structure, nothing else:",
+        '{"song":{"title":"Fun Song Title","lines":["Line one","Line two","Line three","Line four","Line five","Line six"],"note":"怎么配合动作唱（中文）"}}'
+      ].join("\n");
+      promises.push(callAPI(sysSong, songPrompt));
+    } else {
+      promises.push(Promise.resolve({}));
+    }
+
+    const mainResult = await promises[0];
+    const songResult = await promises[1];
+    const combined = { ...mainResult, ...songResult };
+
+    renderResults(combined, typesWanted);
+    if (combined.words && combined.words.length) {
+      drawLabels(combined.words.slice(0, 5));
+    }
+
+  } catch(err) {
+    errorMsg.textContent = '⚠️ Oops! Something went wrong. Please try again. (' + err.message + ')';
+    errorMsg.style.display = 'block';
+    console.error(err);
+  } finally {
+    loading.classList.remove('show');
+    genBtn.disabled = false;
+    tryAgain.style.display = 'block';
+  }
+}
+
+function renderResults(data, types) {
+  const area = document.getElementById('results-area');
+  area.innerHTML = '';
+  area.style.display = 'block';
+
+  let delay = 0;
+
+  // Sentences first
+  if (types.includes('sentence') && data.sentences?.length) {
+    delay += 0.1;
+    const card = createCard('sentence-card', '💬', 'Say It! · 说出来！', delay);
+    data.sentences.forEach(s => {
+      const block = document.createElement('div');
+      block.className = 'sentence-block';
+      block.innerHTML = `<div class="eng">"${s.english}" <button class="speak-btn" onclick="speak('${s.english.replace(/'/g,"\\'")}')">🔊</button></div>
+        <div class="zh">${s.chinese}</div>
+        ${s.tip ? `<div class="tip">💡 ${s.tip}</div>` : ''}`;
+      card.appendChild(block);
+    });
+    area.appendChild(card);
+  }
+
+  // Words second
+  if (types.includes('words') && data.words?.length) {
+    delay += 0.1;
+    const card = createCard('words-card', '🔤', 'Key Words · 关键词', delay);
+    const grid = document.createElement('div');
+    grid.className = 'words-grid';
+    data.words.forEach(w => {
+      const item = document.createElement('div');
+      item.className = 'word-item';
+      item.onclick = () => speak(w.english);
+      item.innerHTML = `<span class="w-emoji">${w.emoji || '📝'}</span>
+        <span class="w-english">${w.english} <button class="speak-btn" onclick="event.stopPropagation();speak('${w.english.replace(/'/g,"\\'")}')">🔊</button></span>
+        <span class="w-pinyin">${w.pinyin || ''}</span>
+        <span class="w-chinese">${w.chinese || ''}</span>`;
+      grid.appendChild(item);
+    });
+    card.querySelector('.card-header').insertAdjacentElement('afterend', grid);
+    area.appendChild(card);
+  }
+
+  // Song
+  if (types.includes('song') && data.song) {
+    delay += 0.1;
+    const card = createCard('song-card', '🎵', 'Sing It! · 唱出来！', delay);
+    const block = document.createElement('div');
+    block.className = 'song-block';
+    const title = document.createElement('div');
+    title.className = 'song-title';
+    title.textContent = '🎶 ' + data.song.title;
+    block.appendChild(title);
+    const linesDiv = document.createElement('div');
+    (data.song.lines || []).forEach(line => {
+      const l = document.createElement('div');
+      l.className = 'song-line';
+      l.innerHTML = `♪ ${line} <button class="speak-btn" onclick="speak('${line.replace(/'/g,"\\'")}')">🔊</button>`;
+      linesDiv.appendChild(l);
+    });
+    block.appendChild(linesDiv);
+    if (data.song.note) {
+      const note = document.createElement('div');
+      note.className = 'song-note';
+      note.textContent = '📝 ' + data.song.note;
+      block.appendChild(note);
+    }
+    card.appendChild(block);
+    area.appendChild(card);
+  }
+
+  // Ideas
+  if (types.includes('ideas') && data.ideas?.length) {
+    delay += 0.1;
+    const card = createCard('ideas-card', '💡', 'Fun Learning Ideas · 趣味学习点子', delay);
+    data.ideas.forEach(idea => {
+      const item = document.createElement('div');
+      item.className = 'idea-item';
+      item.innerHTML = `<div class="idea-icon">${idea.icon || '🌟'}</div>
+        <div class="idea-text">
+          <div class="idea-title">${idea.title}</div>
+          <div class="idea-desc">${idea.description}</div>
+        </div>`;
+      card.appendChild(item);
+    });
+    area.appendChild(card);
+  }
+
+  // Scroll to results
+  setTimeout(() => area.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+async function fetchQuickPhrases(b64) {
+  const qp = document.getElementById('quick-phrases');
+  const qpLoading = document.getElementById('qp-loading');
+  const qpBody = document.getElementById('qp-body');
+
+  qp.style.display = 'block';
+  qpLoading.style.display = 'block';
+  qpBody.innerHTML = '';
+
+  try {
+    const response = await fetch("/api/claude", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 600,
+        system: `You are helping a Chinese mother speak natural English to her 1-3 year old baby.
+Look at the photo and generate 3-4 flowing, connected sentences a loving native English mom would say OUT LOUD right now in this moment.
+They should sound warm, spontaneous and natural — like one continuous thing a mom might say, referencing specific things visible in the photo.
+Example style: "Can you pet the doggy gently? His fur is so fluffy! The dog is playing with the toy — do you want to join him?"
+Always respond ONLY with valid JSON. No markdown.`,
+        messages: [{
+          role: "user",
+          content: [
+            { type: "image", source: { type: "base64", media_type: "image/jpeg", data: b64 }},
+            { type: "text", text: `Look at this photo of my baby. Give me 3 natural things I can say right now as a mom.
+Return ONLY this JSON (no trailing commas):
+{
+  "phrases": [
+    {"english": "Can you pet the doggy gently? His fur is so fluffy!", "chinese": "你能轻轻摸摸小狗吗？它的毛好软啊！"},
+    {"english": "Look, the dog is playing with the toy! Do you want to join him?", "chinese": "看，小狗在玩玩具！你也想一起玩吗？"},
+    {"english": "Say 'dog'! Can you say 'dog', baby?", "chinese": "说'dog'！宝宝，你能说'dog'吗？"}
+  ]
+}` }
+          ]
+        }]
+      })
+    });
+
+    const data = await response.json();
+    if (data.error) throw new Error(data.error.message);
+    const raw = data.content.map(b => b.text || '').join('');
+    function extractJSON(text) {
+      let s = text.replace(/```json|```/g, '').trim();
+      const start = s.indexOf('{'), end = s.lastIndexOf('}');
+      if (start === -1 || end === -1) throw new Error('No JSON');
+      s = s.slice(start, end + 1);
+      s = s.replace(/,(\s*[}\]])/g, '$1');
+      return JSON.parse(s);
+    }
+    const parsed = extractJSON(raw);
+
+    qpLoading.style.display = 'none';
+    (parsed.phrases || []).forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'qp-phrase';
+      div.onclick = () => speak(p.english);
+      div.innerHTML = `<div class="qp-phrase-text">
+        <div class="qp-eng">${p.english}</div>
+        <div class="qp-zh">${p.chinese}</div>
+      </div>
+      <button class="qp-speak" onclick="event.stopPropagation();speak('${p.english.replace(/'/g, "\'")}')">🔊</button>`;
+      qpBody.appendChild(div);
+    });
+
+    const hint = document.createElement('div');
+    hint.className = 'qp-hint';
+    hint.textContent = '👆 Tap any phrase to hear it · 点击任意句子即可朗读';
+    qpBody.appendChild(hint);
+
+  } catch(e) {
+    qpLoading.style.display = 'none';
+    qpBody.innerHTML = '<div style="color:#c07050;font-size:0.85rem;text-align:center;padding:6px">Could not load phrases, try again</div>';
+    console.error(e);
+  }
+}
+
+// ── Photo label fetch (runs on upload, parallel to quick phrases) ──────────
+async function fetchPhotoLabels(b64) {
+  try {
+    const response = await fetch("/api/claude", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 500,
+        system: `You identify key visible objects in a photo for a baby learning app.
+Always respond ONLY with valid JSON. No markdown.`,
+        messages: [{
+          role: "user",
+          content: [
+            { type: "image", source: { type: "base64", media_type: "image/jpeg", data: b64 }},
+            { type: "text", text: `Look at this photo. Pick exactly 5 specific, tangible objects DIRECTLY VISIBLE that a baby (age 1-3) would find interesting — things being touched, held, or interacted with. NOT "room", "floor", "wall", "house", "ceiling", "background".
+Return ONLY this JSON (no trailing commas):
+{"words":[
+  {"english":"doggy","chinese":"小狗","x":0.3,"y":0.5},
+  {"english":"ball","chinese":"球","x":0.6,"y":0.7}
+]}` }
+          ]
+        }]
+      })
+    });
+    const data = await response.json();
+    if (data.error) return;
+    const raw = data.content.map(b => b.text || '').join('');
+    let s = raw.replace(/\`\`\`json|\`\`\`/g, '').trim();
+    const st = s.indexOf('{'), en = s.lastIndexOf('}');
+    if (st === -1 || en === -1) return;
+    s = s.slice(st, en + 1).replace(/,(\s*[}\]])/g, '$1');
+    const parsed = JSON.parse(s);
+    if (parsed.words && parsed.words.length) drawLabels(parsed.words.slice(0, 5));
+  } catch(e) { console.error('Label fetch failed', e); }
+}
+
+// ── Song melody engine (Web Audio API only — no speech synth) ───────────────
+let _songPlaying = false;
+let _songStop = null;
+let _songActx = null;
+
+// Nursery-style pentatonic scale in C major (Hz)
+// C  D  E  G  A  C5  D5  E5  G5  A5
+const SCALE = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 783.99, 880.00];
+
+// Four nursery melody patterns (indices into SCALE)
+const PATTERNS = [
+  [0,1,2,3,2,1,0,1, 2,3,4,3,2,1,0,0],   // Twinkle-style ascending
+  [2,3,4,3,2,1,0,1, 3,4,5,4,3,2,1,0],   // London Bridge style
+  [0,2,1,3,2,4,3,2, 1,0,2,3,4,3,2,0],   // Skip pattern
+  [4,3,2,1,0,1,2,3, 4,5,4,3,2,1,0,0],   // Descending lullaby
+];
+
+// Rhythmic durations (seconds per syllable)
+const RHYTHMS = [
+  [0.35,0.35,0.35,0.35, 0.5,0.5,0.35,0.35, 0.5,0.5],   // even march
+  [0.5,0.25,0.25,0.5,  0.5,0.25,0.25,0.5,  0.5,0.5],    // dotted nursery
+  [0.4,0.4,0.4,0.4,    0.3,0.3,0.3,0.3,    0.5,0.5],    // varied
+];
+
+function syllableCount(word) {
+  word = word.toLowerCase().replace(/[^a-z]/g,'');
+  if (!word) return 1;
+  const m = word.match(/[aeiouy]+/g);
+  let n = m ? m.length : 1;
+  if (word.endsWith('e') && n > 1) n--;
+  return Math.max(1, n);
+}
+
+function createSingingVoice(actx, freq, startTime, duration, vowel) {
+  // Additive synthesis: fundamental + harmonics = human-like vowel
+  const harmonics = [
+    {mult:1,   gain:0.5},
+    {mult:2,   gain:0.25},
+    {mult:3,   gain:0.15},
+    {mult:4,   gain:0.08},
+    {mult:5,   gain:0.05},
+    {mult:6,   gain:0.03},
+  ];
+  // Formant boost — different vowels have different resonances
+  const formantBoost = {'a':2,'e':3,'i':4,'o':2,'u':1}[vowel] || 2;
+
+  const masterGain = actx.createGain();
+  const filter = actx.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.frequency.value = freq * formantBoost;
+  filter.Q.value = 8;
+  masterGain.connect(filter);
+  filter.connect(actx.destination);
+
+  // Also connect direct for body
+  const directGain = actx.createGain();
+  directGain.gain.value = 0.4;
+  masterGain.connect(directGain);
+  directGain.connect(actx.destination);
+
+  harmonics.forEach(({mult, gain}) => {
+    const osc = actx.createOscillator();
+    const g = actx.createGain();
+    osc.type = 'sine';
+    // Slight vibrato
+    const vib = actx.createOscillator();
+    const vibGain = actx.createGain();
+    vib.frequency.value = 5.5;
+    vibGain.gain.value = freq * 0.008;
+    vib.connect(vibGain);
+    vibGain.connect(osc.frequency);
+    vib.start(startTime);
+    vib.stop(startTime + duration + 0.1);
+
+    osc.frequency.setValueAtTime(freq * mult, startTime);
+    g.gain.setValueAtTime(0, startTime);
+    g.gain.linearRampToValueAtTime(gain * 0.3, startTime + 0.04);
+    g.gain.setValueAtTime(gain * 0.3, startTime + duration - 0.08);
+    g.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+
+    osc.connect(g);
+    g.connect(masterGain);
+    osc.start(startTime);
+    osc.stop(startTime + duration + 0.05);
+  });
+
+  // Master envelope
+  masterGain.gain.setValueAtTime(0, startTime);
+  masterGain.gain.linearRampToValueAtTime(1, startTime + 0.05);
+  masterGain.gain.setValueAtTime(1, startTime + duration - 0.1);
+  masterGain.gain.linearRampToValueAtTime(0, startTime + duration);
+}
+
+function playBackingTrack(actx, totalDuration, patternIdx) {
+  // Simple oom-pah bass + chord backing
+  const bassNotes = [SCALE[0]*0.5, SCALE[0]*0.5, SCALE[4]*0.5, SCALE[4]*0.5];
+  const chordNotes = [[SCALE[0],SCALE[2],SCALE[4]], [SCALE[1],SCALE[3],SCALE[5]]];
+  const beatDur = 0.5;
+  const beats = Math.ceil(totalDuration / beatDur);
+  let t = actx.currentTime + 0.02;
+
+  for (let b = 0; b < beats; b++) {
+    // Bass note on beat 1 and 3
+    if (b % 2 === 0) {
+      const osc = actx.createOscillator();
+      const g = actx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = bassNotes[b % bassNotes.length];
+      g.gain.setValueAtTime(0.15, t + b*beatDur);
+      g.gain.exponentialRampToValueAtTime(0.001, t + b*beatDur + beatDur*0.8);
+      osc.connect(g); g.connect(actx.destination);
+      osc.start(t + b*beatDur); osc.stop(t + b*beatDur + beatDur);
+    }
+    // Soft chord stab on beat 2 and 4
+    if (b % 2 === 1) {
+      const chord = chordNotes[Math.floor(b/2) % chordNotes.length];
+      chord.forEach(freq => {
+        const osc = actx.createOscillator();
+        const g = actx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        g.gain.setValueAtTime(0.04, t + b*beatDur);
+        g.gain.exponentialRampToValueAtTime(0.001, t + b*beatDur + beatDur*0.6);
+        osc.connect(g); g.connect(actx.destination);
+        osc.start(t + b*beatDur); osc.stop(t + b*beatDur + beatDur);
+      });
+    }
+  }
+}
+
+async function playSong(lines, songId) {
+  const btn = document.getElementById(songId + '_btn');
+
+  if (_songPlaying) {
+    _songStop && _songStop();
+    return;
+  }
+  if (!lines || !lines.length) return;
+
+  _songPlaying = true;
+  if (btn) { btn.innerHTML = '⏹ Stop'; btn.classList.add('playing'); }
+
+  let stopped = false;
+  let actx = null;
+
+  _songStop = () => {
+    stopped = true;
+    _songPlaying = false;
+    if (actx) { try { actx.close(); } catch(e){} }
+    if (btn) { btn.innerHTML = '▶ Sing!'; btn.classList.remove('playing'); }
+    lines.forEach((_, i) => {
+      const el = document.getElementById(songId + '_line_' + i);
+      if (el) el.classList.remove('active');
+    });
+  };
+
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    actx = new AudioCtx();
+    if (actx.state === 'suspended') await actx.resume();
+
+    const patternIdx = Math.floor(Math.random() * PATTERNS.length);
+    const pattern = PATTERNS[patternIdx];
+    const rhythm = RHYTHMS[Math.floor(Math.random() * RHYTHMS.length)];
+
+    // Pre-schedule ALL audio upfront so it plays perfectly
+    // First pass: calculate timing for each line/syllable
+    let scheduleTime = actx.currentTime + 0.3; // small start delay
+    const lineSchedule = []; // {startTime, endTime, syllables:[{time,freq,dur,char}]}
+
+    // Musical intro: ascending arpeggio
+    [0,2,4,5].forEach((si, i) => {
+      const freq = SCALE[si];
+      createSingingVoice(actx, freq, scheduleTime + i*0.18, 0.22, 'a');
+    });
+    scheduleTime += 0.18*4 + 0.3;
+
+    lines.forEach((line, lineIdx) => {
+      const words = line.replace(/[^a-zA-Z '\-]/g,'').split(' ').filter(w=>w.length>0);
+      const lineSyls = [];
+      let lineStart = scheduleTime;
+
+      words.forEach((word, wi) => {
+        const syls = syllableCount(word);
+        const vowelMatch = word.toLowerCase().match(/[aeiouy]/);
+        const vowel = vowelMatch ? vowelMatch[0] : 'a';
+
+        for (let s = 0; s < syls; s++) {
+          const noteIdx = (lineIdx * 4 + lineSyls.length) % pattern.length;
+          const freq = SCALE[Math.min(pattern[noteIdx], SCALE.length - 1)];
+          const dur = rhythm[lineSyls.length % rhythm.length];
+
+          createSingingVoice(actx, freq, scheduleTime, dur * 0.92, vowel);
+          lineSyls.push({ time: scheduleTime, freq, dur });
+          scheduleTime += dur;
+        }
+        // Small gap between words
+        scheduleTime += 0.06;
+      });
+
+      // Gap between lines
+      scheduleTime += 0.25;
+      lineSchedule.push({ startTime: lineStart, endTime: scheduleTime, syls: lineSyls });
+    });
+
+    // Play backing track for full duration
+    playBackingTrack(actx, scheduleTime - actx.currentTime, patternIdx);
+
+    // Now animate lyrics in sync using setTimeout
+    const audioStart = actx.currentTime;
+    lineSchedule.forEach((ls, lineIdx) => {
+      const delay = (ls.startTime - audioStart) * 1000;
+      const endDelay = (ls.endTime - audioStart) * 1000;
+      setTimeout(() => {
+        if (stopped) return;
+        lines.forEach((_, j) => {
+          const el = document.getElementById(songId + '_line_' + j);
+          if (el) el.classList.toggle('active', j === lineIdx);
+        });
+      }, Math.max(0, delay));
+      setTimeout(() => {
+        if (stopped) return;
+        if (lineIdx === lines.length - 1) {
+          // Last line finished
+          lines.forEach((_, j) => {
+            const el = document.getElementById(songId + '_line_' + j);
+            if (el) el.classList.remove('active');
+          });
+          setTimeout(() => { if (!stopped) _songStop && _songStop(); }, 400);
+        }
+      }, Math.max(0, endDelay));
+    });
+
+  } catch(e) {
+    console.error('Song error:', e);
+    if (btn) { btn.innerHTML = '▶ Sing!'; btn.classList.remove('playing'); }
+    _songPlaying = false;
+  }
+}
+
+let _labelWords = [];
+let _labelObserver = null;
+
+function drawLabels(words) {
+  _labelWords = words;
+  const img = document.getElementById('preview-img');
+  const canvas = document.getElementById('label-canvas');
+  if (!canvas || !img) return;
+
+  // Disconnect any previous observer
+  if (_labelObserver) { _labelObserver.disconnect(); _labelObserver = null; }
+
+  function render() {
+    const W = img.offsetWidth;
+    const H = img.offsetHeight;
+    if (!W || !H) { requestAnimationFrame(render); return; }
+
+    canvas.width = W;
+    canvas.height = H;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, W, H);
+
+    const colors = ['#FF9A76','#7EC8E3','#73C67A','#FFD166','#C9B8F5'];
+
+    _labelWords.forEach((w, i) => {
+      const x = (w.x != null ? w.x : 0.2 + i * 0.15) * W;
+      const y = (w.y != null ? w.y : 0.2 + i * 0.15) * H;
+      const label = w.english || '';
+      const chinese = w.chinese || '';
+      const color = colors[i % colors.length];
+
+      // Dot
+      ctx.beginPath();
+      ctx.arc(x, y, 7, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      // Pulse ring
+      ctx.beginPath();
+      ctx.arc(x, y, 13, 0, Math.PI * 2);
+      ctx.strokeStyle = color;
+      ctx.globalAlpha = 0.4;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+
+      // Measure text for pill size
+      const padX = 10;
+      const pillH = 36;
+      ctx.font = 'bold 13px Nunito, sans-serif';
+      const textW = ctx.measureText(label).width;
+      ctx.font = '11px Nunito, sans-serif';
+      const chineseW = ctx.measureText(chinese).width;
+      const pillW = Math.max(textW, chineseW) + padX * 2;
+
+      // Position pill: right of dot, flip left if off-screen
+      let px = x + 18;
+      let py = y - pillH / 2;
+      if (px + pillW > W - 4) px = x - pillW - 18;
+      if (py < 4) py = 4;
+      if (py + pillH > H - 4) py = H - pillH - 4;
+
+      // Connecting line
+      const lineTargetX = px < x ? px + pillW : px;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(lineTargetX, py + pillH / 2);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5;
+      ctx.globalAlpha = 0.65;
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+
+      // Pill background with shadow
+      ctx.save();
+      ctx.shadowColor = 'rgba(0,0,0,0.18)';
+      ctx.shadowBlur = 6;
+      ctx.shadowOffsetY = 2;
+      const r = pillH / 2;
+      ctx.beginPath();
+      ctx.moveTo(px + r, py);
+      ctx.lineTo(px + pillW - r, py);
+      ctx.arcTo(px + pillW, py, px + pillW, py + r, r);
+      ctx.lineTo(px + pillW, py + pillH - r);
+      ctx.arcTo(px + pillW, py + pillH, px + pillW - r, py + pillH, r);
+      ctx.lineTo(px + r, py + pillH);
+      ctx.arcTo(px, py + pillH, px, py + pillH - r, r);
+      ctx.lineTo(px, py + r);
+      ctx.arcTo(px, py, px + r, py, r);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.restore();
+
+      // English text
+      ctx.fillStyle = 'white';
+      ctx.font = 'bold 13px Nunito, sans-serif';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(label, px + padX, py + pillH / 2 - 7);
+
+      // Chinese text
+      ctx.font = '11px Nunito, sans-serif';
+      ctx.globalAlpha = 0.92;
+      ctx.fillText(chinese, px + padX, py + pillH / 2 + 8);
+      ctx.globalAlpha = 1;
+    });
+  }
+
+  function tryRender() {
+    if (img.complete && img.naturalWidth) {
+      // Wait a frame for layout to settle
+      requestAnimationFrame(() => requestAnimationFrame(render));
+    } else {
+      img.onload = () => requestAnimationFrame(() => requestAnimationFrame(render));
+    }
+  }
+
+  tryRender();
+
+  // Re-render on resize (e.g. orientation change)
+  if (window.ResizeObserver) {
+    _labelObserver = new ResizeObserver(() => {
+      if (_labelWords.length) requestAnimationFrame(render);
+    });
+    _labelObserver.observe(img);
+  }
+}
+
+function createCard(className, icon, title, delay) {
+  const card = document.createElement('div');
+  card.className = `result-card ${className}`;
+  card.style.animationDelay = delay + 's';
+  const header = document.createElement('div');
+  header.className = 'card-header';
+  header.innerHTML = `<span class="card-icon">${icon}</span><h3>${title}</h3>`;
+  card.appendChild(header);
+  return card;
+}
+</script>
+</body>
+</html>
